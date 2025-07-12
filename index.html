@@ -194,10 +194,10 @@
     <form id="signup-form" style="display:none;">
       <input type="text" placeholder="First Name" required />
       <input type="text" placeholder="Last Name" required />
-      <input type="text" placeholder="Username" name="username" required />
-      <input type="email" placeholder="Email" name="email" required />
-      <input type="password" placeholder="Password" name="password" required />
-      <input type="password" placeholder="Confirm Password" name="confirmPassword" required />
+      <input type="text" placeholder="Username" required />
+      <input type="email" placeholder="Email" required />
+      <input type="password" placeholder="Password" required />
+      <input type="password" placeholder="Confirm Password" required />
       <button type="submit" class="btn">Sign Up</button>
       <a href="#" onclick="toggleForms()" class="forgot-password">Already have an account? Sign in</a>
       <a href="https://accounts.google.com/AccountChooser" target="_blank" class="btn google-btn">
@@ -231,7 +231,7 @@
   // EmailJS configuration (replace with your actual IDs if using)
   const SERVICE_ID = "service_7w96g3q";
   const TEMPLATE_ID = "template_uuwzgje";
-  const PUBLIC_KEY = "AkHy73JVySRk69Rv2"; // Example: Replace with your actual EmailJS Public Key
+  const PUBLIC_KEY = "AkHy73JVjSRk69Rv2";
 
   emailjs.init(PUBLIC_KEY);
 
@@ -265,13 +265,14 @@
   document.getElementById("forgotForm").addEventListener("submit", function (e) {
     e.preventDefault();
     const email = this.user_email.value;
-    const resetURL = `http://localhost:3000/reset-password?email=${encodeURIComponent(email)}`; // Placeholder URL, adjust if needed
+    const resetURL = `https://rewear.com/reset-password?email=${encodeURIComponent(email)}`; // Placeholder URL
     this.reset_link.value = resetURL;
 
     emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, this)
       .then(() => {
         document.getElementById("forgot-success").style.display = "block";
-        this.user_email.value = ''; // Clear the email field
+        // Optionally, clear the email field after sending
+        this.user_email.value = '';
       })
       .catch((error) => {
         console.error("Email sending failed:", error);
@@ -279,68 +280,36 @@
       });
   });
 
-  // --- AUTHENTICATION LOGIC (Frontend part) ---
-  document.getElementById("login-form").addEventListener("submit", async function (e) {
+  // --- REDIRECTION LOGIC ---
+  document.getElementById("login-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    const username = this.username.value;
-    const password = this.password.value;
+    // In a real application, you would send username/password to a server here.
+    // The server would validate credentials and, if successful,
+    // redirect or return a success response.
 
-    try {
-      const response = await fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
+    // FOR DEMONSTRATION ONLY: Simulate a successful login
+    // You could add a simple, non-secure check like:
+    // const username = this.username.value;
+    // const password = this.password.value;
+    // if (username === "user" && password === "pass") {
+    //   alert("Login successful! Redirecting to Rewear Homepage.");
+    //   window.location.href = "homepage.html"; // Redirect to your new homepage file
+    // } else {
+    //   alert("Invalid username or password (demo only).");
+    // }
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(data.message + " Redirecting to Rewear Homepage.");
-        window.location.href = "homepage.html"; // Redirect to your new homepage file
-      } else {
-        alert("Login failed: " + data.message);
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-      alert('An error occurred during login. Please try again.');
-    }
+    alert("Simulating successful login! Redirecting to Rewear Homepage.");
+    window.location.href = "homepage.html"; // Redirect to your new homepage file
   });
 
-  document.getElementById("signup-form").addEventListener("submit", async function (e) {
+  document.getElementById("signup-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    const username = this.username.value;
-    const email = this.email.value;
-    const password = this.password.value;
-    const confirmPassword = this.confirmPassword.value;
+    // In a real application, you would send new user data to a server here
+    // to create an account securely.
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:3000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(data.message + " Redirecting to Rewear Homepage.");
-        window.location.href = "homepage.html"; // Redirect to your new homepage file
-      } else {
-        alert("Signup failed: " + data.message);
-      }
-    } catch (error) {
-      console.error('Error during signup:', error);
-      alert('An error occurred during signup. Please try again.');
-    }
+    // FOR DEMONSTRATION ONLY: Simulate a successful signup
+    alert("Simulating successful signup! Redirecting to Rewear Homepage.");
+    window.location.href = "homepage.html"; // Redirect to your new homepage file
   });
 </script>
 </body>
