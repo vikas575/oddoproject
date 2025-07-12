@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReWear – Explore Styles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f1f0ec;
+      color: #2c2c2c;
+    }
+
+    header {
+      background: #ffffff;
+      color: #2c2c2c;
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .logo img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      color: #2c2c2c;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #8c7b75;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 40px 0 10px;
+      font-size: 32px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .filter-bar {
+      padding: 20px 30px;
+      background: #ffffff;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .filter-bar select {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      background-color: #fafafa;
+    }
+
+    .product-section {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 30px;
+    }
+
+    .card {
+      display: inline-block;
+      width: 230px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+      margin-right: 20px;
+      vertical-align: top;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      display: block;
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+    .card-body h3 {
+      font-size: 16px;
+      margin: 0;
+      color: #2c2c2c;
+    }
+
+    .card-body p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: #6a6a6a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.ibb.co/MBtjqXQ/logo.png" alt="ReWear Logo">
+      ReWear
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Categories</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <h1>Explore Your Next Outfit</h1>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <select>
+      <option value="">Category</option>
+      <option value="tshirt">T-Shirt</option>
+      <option value="dress">Dress</option>
+      <option value="jeans">Jeans</option>
+      <option value="jacket">Jacket</option>
+      <option value="kurta">Kurta</option>
+      <option value="shoes">Shoes</option>
+      <option value="hoodie">Hoodie</option>
+      <option value="bag">Bag</option>
+    </select>
+    <select>
+      <option value="">Color</option>
+      <option value="red">Red</option>
+      <option value="blue">Blue</option>
+      <option value="black">Black</option>
+      <option value="white">White</option>
+      <option value="yellow">Yellow</option>
+    </select>
+    <select>
+      <option value="">Size</option>
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+      <option value="Free">Free</option>
+    </select>
+    <select>
+      <option value="">Price</option>
+      <option value="0-499">Under ₹499</option>
+      <option value="500-999">₹500 - ₹999</option>
+      <option value="1000-1499">₹1000 - ₹1499</option>
+    </select>
+  </div>
+
+  <!-- Product Section -->
+  <div class="product-section">
+    <div class="card">
+      <img src="https://i.ibb.co/ds5fjgCT/tshirt.webp" alt="T-Shirt">
+      <div class="card-body">
+        <h3>Graphic T-Shirt</h3>
+        <p>Size: M • ₹499</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co/8DbTWCDm/floral-dress.webp" alt="Floral Dress">
+      <div class="card-body">
+        <h3>Floral Dress</h3>
+        <p>Size: M • ₹749</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co/r2k9PwVY/jeans.jpg" alt="Jeans">
+      <div class="card-body">
+        <h3>Blue Denim Jeans</h3>
+        <p>Size: L • ₹999</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co/hxq0T6MB/denin-jacket.jpg" alt="Denim Jacket">
+      <div class="card-body">
+        <h3>Denim Jacket</h3>
+        <p>Size: M • ₹1299</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co/S7MsdPW7/kurta.jpg" alt="Kurta">
+      <div class="card-body">
+        <h3>Traditional Kurta</h3>
+        <p>Size: L • ₹899</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co/vvx4Q2V3/domino-studio-164-6w-VEHf-I-unsplash.jpg" alt="Sneakers">
+      <div class="card-body">
+        <h3>White Sneakers</h3>
+        <p>Size: 9 • ₹1599</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co/v2ZY2mD/redicul-pict-ggc-JKGpx3p-I-unsplash.jpg" alt="Oversized Hoodie">
+      <div class="card-body">
+        <h3>Oversized Hoodie</h3>
+        <p>Size: XL • ₹1199</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co/0j3Td7TC/alexandr-sadkov-Bn-G4-KWAzt9c-unsplash.jpg" alt="Leather Bag">
+      <div class="card-body">
+        <h3>Leather Shoulder Bag</h3>
+        <p>Free Size • ₹1499</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
