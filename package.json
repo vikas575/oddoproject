@@ -1,0 +1,16 @@
+ "name": "rewear-app",
+  "version": "1.0.0",
+  "description": "A full-stack demo for Rewear shopping website (in-memory data).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["rewear", "ecommerce", "nodejs", "express", "in-memory", "fullstack"],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}
