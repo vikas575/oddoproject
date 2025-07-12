@@ -602,7 +602,7 @@
           <li><a href="#" onclick="navigate('Kids')">Kids</a></li>
           <li><a href="#" onclick="navigate('Accessories')">Accessories</a></li>
           <li><a href="#" onclick="navigate('Sale')">Sale</a></li>
-          <li><a href="#sell-section" onclick="navigate('Sell Your Items')">Sell Your Items</a></li>
+          <li><a href="#sell-section" onclick="navigate('Sell')">Sell Your Items</a></li>
         </ul>
       </nav>
     </div>
@@ -651,7 +651,7 @@
         <li><strong>Eco-Friendly:</strong> Give clothes a second life, reduce fashion waste.</li>
         <li><strong>Affordable Prices:</strong> Get amazing deals on unique pieces.</li>
       </ul>
-      <a href="#featured-products" class="hero-button" onclick="navigate('Start Shopping')">Start Shopping</a>
+      <a href="#featured-products" class="hero-button">Start Shopping</a>
     </div>
 
     <div class="sell-options" id="sell-section">
@@ -730,8 +730,39 @@
 
   <div class="container" id="featured-products">
     <h2 class="section-title">Just Dropped<span>Fresh finds, every day</span></h2>
-    <div class="product-grid" id="productGrid">
-      <p>Loading products...</p>
+    <div class="product-grid">
+      <div class="product-card" onclick="navigate('Vintage Denim Jacket Product')">
+        <img src="https://via.placeholder.com/300x250/C8F9F3/000000?text=Vintage+Jacket" alt="Vintage Jacket">
+        <div class="product-info">
+          <h3>Vintage Denim Jacket</h3>
+          <p>Classic fit, timeless style. Like new condition.</p>
+          <div class="product-price">$45.00</div>
+        </div>
+      </div>
+      <div class="product-card" onclick="navigate('Bohemian Maxi Dress Product')">
+        <img src="https://via.placeholder.com/300x250/F8D4C8/000000?text=Flowy+Dress" alt="Flowy Dress">
+        <div class="product-info">
+          <h3>Bohemian Maxi Dress</h3>
+          <p>Lightweight fabric, perfect for summer.</p>
+          <div class="product-price">$30.00</div>
+        </div>
+      </div>
+      <div class="product-card" onclick="navigate('Handmade Leather Boots Product')">
+        <img src="https://via.placeholder.com/300x250/CCE2CB/000000?text=Leather+Boots" alt="Leather Boots">
+        <div class="product-info">
+          <h3>Handmade Leather Boots</h3>
+          <p>Durable and stylish, great for any season.</p>
+          <div class="product-price">$75.00</div>
+        </div>
+      </div>
+      <div class="product-card" onclick="navigate('Designer Handbag Product')">
+        <img src="https://via.placeholder.com/300x250/D2E9FB/000000?text=Designer+Bag" alt="Designer Bag">
+        <div class="product-info">
+          <h3>Pre-loved Designer Handbag</h3>
+          <p>Iconic design, excellent condition.</p>
+          <div class="product-price">$120.00</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -898,72 +929,52 @@
       // In a real application, you'd send this email to your newsletter service
     });
 
-    // --- Frontend Logic for Fetching Products ---
-    async function fetchProducts() {
-        const productGrid = document.getElementById('productGrid');
-        productGrid.innerHTML = '<p>Loading products from server...</p>'; // Show loading message
-        try {
-            const response = await fetch('http://localhost:3000/api/products');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const products = await response.json();
-            
-            if (products.length === 0) {
-                productGrid.innerHTML = '<p>No products available yet. Be the first to sell!</p>';
-                return;
-            }
-
-            productGrid.innerHTML = ''; // Clear loading message
-            products.forEach(product => {
-                const productCard = `
-                    <div class="product-card" onclick="navigate('${product.title} Product')">
-                        <img src="${product.imageUrl}" alt="${product.title}">
-                        <div class="product-info">
-                            <h3>${product.title}</h3>
-                            <p>${product.description || 'No description provided.'}</p>
-                            <div class="product-price">$${product.price.toFixed(2)}</div>
-                        </div>
-                    </div>
-                `;
-                productGrid.insertAdjacentHTML('beforeend', productCard);
-            });
-        } catch (error) {
-            console.error('Error fetching products:', error);
-            productGrid.innerHTML = '<p>Failed to load products. Please ensure the backend server is running.</p>';
-        }
-    }
-
-    // --- Frontend Logic for Selling Items ---
-    document.getElementById("sellItemForm").addEventListener("submit", async function(event) {
+    // Dummy "Sell Item" Form Submission
+    document.getElementById("sellItemForm").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent default form submission
 
-        const formData = new FormData(this); // Use FormData directly for file uploads
+        const formData = new FormData(this);
+        const itemData = {};
+        for (const [key, value] of formData.entries()) {
+            itemData[key] = value;
+        }
 
-        try {
-            const response = await fetch('http://localhost:3000/api/products', {
-                method: 'POST',
-                body: formData // Multer expects FormData
-            });
+        // Simulate sending data to backend
+        alert(
+            "Attempting to list item:\n" +
+            "Title: " + itemData.title + "\n" +
+            "Category: " + itemData.category + "\n" +
+            "Condition: " + itemData.condition + "\n" +
+            "Price: $" + itemData.price + "\n" +
+            "Description: " + itemData.description + "\n" +
+            "Image: " + (itemData.image ? itemData.image.name : "No file") +
+            "\n\n(This is a frontend-only simulation. In a real app, this data would be sent to your backend API!)"
+        );
 
-            const data = await response.json();
-
-            if (response.ok) {
-                alert('Item listed successfully! ' + data.message);
+        // In a real application, you would use fetch API:
+        /*
+        fetch('/api/products', { // This would be your backend API endpoint
+            method: 'POST',
+            body: formData // Use formData directly for file uploads
+            // For JSON data (without file upload), use:
+            // headers: { 'Content-Type': 'application/json' },
+            // body: JSON.stringify(itemData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Item listed successfully! ' + JSON.stringify(data));
                 this.reset(); // Clear form on success
-                fetchProducts(); // Refresh product list after selling a new item
             } else {
                 alert('Failed to list item: ' + data.message);
             }
-        } catch (error) {
+        })
+        .catch(error => {
             console.error('Error listing item:', error);
-            alert('An error occurred while listing your item. Please try again. (Check console for details)');
-        }
+            alert('An error occurred while listing your item. Please try again.');
+        });
+        */
     });
-
-    // Fetch products when the homepage loads
-    document.addEventListener('DOMContentLoaded', fetchProducts);
-
   </script>
 </body>
 </html>
