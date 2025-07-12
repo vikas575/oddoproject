@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rewear | Sell Your Item</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f3ea, #e6e1d3);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #52796f;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.5rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #52796f;
+    }
+    form label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    form textarea {
+      resize: vertical;
+    }
+    .btn {
+      background-color: #84a98c;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      margin-top: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #52796f;
+    }
+    .preview {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
+    }
+    .items {
+      max-width: 800px;
+      margin: 40px auto;
+    }
+    .item {
+      background: white;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      display: flex;
+      gap: 15px;
+    }
+    .item img {
+      max-width: 100px;
+      border-radius: 6px;
+    }
+    .item-details {
+      flex-grow: 1;
+    }
+    .item-details h3 {
+      margin: 0 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Rewear</h1>
+    <p>Sell your pre-loved fashion</p>
+  </header>
+
+  <div class="container">
+    <h2>Upload Your Item</h2>
+    <form id="sellForm">
+      <label for="image">Item Image</label>
+      <input type="file" id="image" accept="image/*" required>
+
+      <label for="title">Title</label>
+      <input type="text" id="title" required>
+
+      <label for="brand">Brand</label>
+      <input type="text" id="brand">
+
+      <label for="condition">Condition</label>
+      <select id="condition">
+        <option>New</option>
+        <option>Like New</option>
+        <option>Used</option>
+        <option>Worn</option>
+      </select>
+
+      <label for="price">Price (₹)</label>
+      <input type="number" id="price" required>
+
+      <label for="desc">Description</label>
+      <textarea id="desc" rows="4"></textarea>
+
+      <button type="submit" class="btn">Add Item</button>
+    </form>
+
+    <div class="preview" id="preview"></div>
+  </div>
+
+  <div class="items" id="itemsList">
+    <h2 style="text-align:center;">Items for Sale</h2>
+  </div>
+
+  <script>
+    const form = document.getElementById("sellForm");
+    const itemsList = document.getElementById("itemsList");
+    const preview = document.getElementById("preview");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value;
+      const brand = document.getElementById("brand").value;
+      const condition = document.getElementById("condition").value;
+      const price = document.getElementById("price").value;
+      const desc = document.getElementById("desc").value;
+      const imageFile = document.getElementById("image").files[0];
+
+      const reader = new FileReader();
+      reader.onload = function() {
+        const imageUrl = reader.result;
+
+        const itemHTML = `
+          <div class="item">
+            <img src="${imageUrl}" alt="${title}">
+            <div class="item-details">
+              <h3>${title}</h3>
+              <p><strong>Brand:</strong> ${brand}</p>
+              <p><strong>Condition:</strong> ${condition}</p>
+              <p><strong>Price:</strong> ₹${price}</p>
+              <p>${desc}</p>
+            </div>
+          </div>
+        `;
+
+        itemsList.innerHTML += itemHTML;
+        form.reset();
+        preview.innerHTML = "✅ Item added successfully!";
+      }
+      reader.readAsDataURL(imageFile);
+    });
+  </script>
+</body>
+</html>
