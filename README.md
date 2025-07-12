@@ -1,0 +1,1710 @@
+Rewear App: Sustainable Fashion Platform (In-Memory Demo)
+Project Overview
+The Rewear App is a demo full-stack web application designed to showcase a sustainable fashion platform where users can buy and sell pre-loved clothing. This version utilizes an in-memory data storage for simplicity, making it easy to set up and run without external database configurations.
+
+Please Note: This application is built for demonstration and learning purposes. Data is not persistent (it will be lost on server restart), and user authentication is not secure for a production environment.
+
+Features
+User Authentication:
+
+Sign Up: Register new user accounts.
+
+Sign In: Log in existing users.
+
+Forgot Password: Simulated email sending for password reset (via EmailJS).
+
+Dynamic Homepage:
+
+Visually rich layout resembling a modern e-commerce site.
+
+Hero section with call to action.
+
+Categorized browsing (placeholder).
+
+Featured "New Arrivals" section.
+
+"How It Works" section explaining the platform's value.
+
+Rotating customer testimonials.
+
+Newsletter subscription (simulated).
+
+"Buy" Functionality (Display):
+
+Products are fetched and displayed dynamically from the in-memory server.
+
+Product cards with image, title, description, and price.
+
+"Sell" Functionality (Submission):
+
+Form for users to list new items (title, category, condition, price, description, image upload).
+
+Uploaded images are stored locally on the server.
+
+Submitted item data is added to the in-memory product list.
+
+Simulated Navigation: Basic alert messages confirm navigation actions to different sections/pages.
+
+Technologies Used
+Frontend
+
+HTML5: Structure and content.
+
+CSS3: Styling and responsive design.
+
+JavaScript (ES6+): Client-side logic, form handling, API calls, dynamic content rendering.
+
+Google Fonts: Custom typography (Great Vibes, Poppins, Playfair Display).
+
+EmailJS: For simulated "Forgot Password" email sending.
+
+Backend
+
+Node.js: JavaScript runtime environment.
+
+Express.js: Web application framework for Node.js, handling API routes.
+
+Multer: Node.js middleware for handling multipart/form-data, primarily used for file uploads (product images).
+
+CORS: Middleware to enable Cross-Origin Resource Sharing.
+
+In-Memory Data Storage: JavaScript arrays are used to store user and product data (non-persistent).
+
+Setup Instructions
+Follow these steps to get the Rewear App running on your local machine.
+
+1. Prerequisites
+
+Node.js: Make sure you have Node.js installed. You can download it from nodejs.org. This will also install npm (Node Package Manager).
+
+2. Create Project Folder Structure
+
+Create a new folder for your project, for example, rewear-app. Inside rewear-app, create another folder named public.
+
+Your project structure should initially look like this:
+
+rewear-app/
+├── public/
+│   └── (empty)
+└── (empty)
+
+3. Save the Code Files
+
+Create the following files with the exact names and content provided below, placing them in their respective directories:
+
+rewear-app/public/index.html
+
+(Your authentication page)
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rewear Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f3ea, #e6e1d3);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    body::after {
+      content: "";
+      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0.05;
+      z-index: 0;
+    }
+    .rewear-background {
+      position: absolute;
+      font-family: 'Great Vibes', cursive;
+      font-size: 30vw;
+      color: rgba(150, 150, 150, 0.05);
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .login-box {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+      z-index: 2;
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      background: linear-gradient(to right, #52796f, #9fc6a3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 5px;
+    }
+    .brand-name::after {
+      content: "";
+      display: block;
+      width: 80%;
+      height: 3px;
+      background: linear-gradient(to right, #84a98c, #52796f);
+      margin: 8px auto 0;
+      border-radius: 5px;
+      box-shadow: 0 0 8px #84a98c;
+    }
+    .tagline {
+      font-size: 16px;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    .hanger-icon { margin-bottom: 20px; }
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #84a98c;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      margin-top: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover { background-color: #52796f; }
+    .google-btn {
+      background-color: #fff;
+      color: #333;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+      text-decoration: none;
+    }
+    .google-btn img {
+      width: 18px;
+      height: 18px;
+    }
+    .forgot-password {
+      display: block;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #52796f;
+      text-decoration: none;
+    }
+    .forgot-password:hover { text-decoration: underline; }
+    .testimonial {
+      position: absolute;
+      bottom: 30px;
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      width: 100%;
+      z-index: 2;
+      animation: fadeSlide 8s infinite;
+    }
+    @keyframes fadeSlide {
+      0%, 100% { opacity: 0; transform: translateY(10px); }
+      10%, 40% { opacity: 1; transform: translateY(0); }
+      50%, 90% { opacity: 0; transform: translateY(-10px); }
+    }
+    @media (max-width: 450px) {
+      .login-box { padding: 30px 20px; max-width: 90%; }
+      .rewear-background { font-size: 100px; }
+      .brand-name { font-size: 36px; }
+    }
+    #forgot-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    #forgot-modal .modal-content {
+      background:#fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="rewear-background">Rewear</div>
+
+<div class="login-box">
+  <div class="brand-name">Rewear</div>
+  <p class="tagline">Wear the Change</p>
+  <div class="hanger-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#52796f" viewBox="0 0 24 24">
+      <path d="M12.001 2c-.552 0-1 .448-1 1 0 .552.448 1 1 1s1 .448 1 1-.448 1-1 1-1 .448-1 1v.586l-8.707 8.707a1 1 0 0 0 .707 1.707H8a1 1 0 1 0 0-2H5.414l6.293-6.293a1 1 0 0 1 1.586 0l6.293 6.293H16a1 1 0 1 0 0 2h4a1 1 0 0 0 .707-1.707l-8.707-8.707V8c0-.552-.448-1-1-1s-1-.448-1-1 .448-1 1-1 1-.448 1-1c0-.552-.448-1-1-1z"/>
+    </svg>
+  </div>
+
+  <div id="auth-container">
+    <form id="login-form">
+      <input type="text" placeholder="Username" name="username" required />
+      <input type="password" placeholder="Password" name="password" required />
+      <a href="#" class="forgot-password" onclick="showForgotForm()">Forgot Password?</a>
+      <button type="submit" class="btn">Sign In</button>
+      <a href="#" onclick="toggleForms()" class="forgot-password">Don't have an account? Sign up</a>
+      <a href="https://accounts.google.com/AccountChooser" target="_blank" class="btn google-btn">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google Icon">
+        Continue with Google
+      </a>
+    </form>
+
+    <form id="signup-form" style="display:none;">
+      <input type="text" placeholder="First Name" required />
+      <input type="text" placeholder="Last Name" required />
+      <input type="text" placeholder="Username" name="username" required />
+      <input type="email" placeholder="Email" name="email" required />
+      <input type="password" placeholder="Password" name="password" required />
+      <input type="password" placeholder="Confirm Password" name="confirmPassword" required />
+      <button type="submit" class="btn">Sign Up</button>
+      <a href="#" onclick="toggleForms()" class="forgot-password">Already have an account? Sign in</a>
+      <a href="https://accounts.google.com/AccountChooser" target="_blank" class="btn google-btn">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google Icon">
+        Continue with Google
+      </a>
+    </form>
+  </div>
+</div>
+
+<div class="testimonial" id="testimonial-text">"Clothes that feel new, with a soul that's renewed."</div>
+
+<!-- Forgot Password Modal -->
+<div id="forgot-modal">
+  <div class="modal-content">
+    <h3>Forgot Your Password?</h3>
+    <p>Enter your registered email to receive a reset link.</p>
+    <form id="forgotForm">
+      <input type="email" name="user_email" placeholder="Your email..." required />
+      <input type="hidden" name="reset_link" id="reset_link" />
+      <button type="submit" class="btn">Send Reset Link</button>
+      <button type="button" class="btn" style="background:#ccc;" onclick="hideForgotForm()">Cancel</button>
+    </form>
+    <div id="forgot-success" style="margin-top: 10px; font-size: 14px; color: green; display: none;">
+      ✅ Reset link sent! Check your inbox.
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  // EmailJS configuration (replace with your actual IDs if using)
+  const SERVICE_ID = "service_7w96g3q";
+  const TEMPLATE_ID = "template_uuwzgje";
+  const PUBLIC_KEY = "AkHy73JVySRk69Rv2"; // Example: Replace with your actual EmailJS Public Key
+
+  emailjs.init(PUBLIC_KEY);
+
+  const testimonials = [
+    '"Clothes that feel new, with a soul that\'s renewed."',
+    '"I found my favorite jeans again — thanks Rewear!"',
+    '"Eco-friendly fashion made easy and affordable."',
+    '"Wearing stories, not just clothes."',
+  ];
+  let index = 0;
+  setInterval(() => {
+    index = (index + 1) % testimonials.length;
+    document.getElementById("testimonial-text").innerText = testimonials[index];
+  }, 8000);
+
+  function toggleForms() {
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
+    loginForm.style.display = loginForm.style.display === "none" ? "block" : "none";
+    signupForm.style.display = signupForm.style.display === "none" ? "block" : "none";
+  }
+
+  function showForgotForm() {
+    document.getElementById("forgot-modal").style.display = "flex";
+  }
+
+  function hideForgotForm() {
+    document.getElementById("forgot-modal").style.display = "none";
+  }
+
+  document.getElementById("forgotForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const email = this.user_email.value;
+    const resetURL = `http://localhost:3000/reset-password?email=${encodeURIComponent(email)}`; // Placeholder URL, adjust if needed
+    this.reset_link.value = resetURL;
+
+    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, this)
+      .then(() => {
+        document.getElementById("forgot-success").style.display = "block";
+        this.user_email.value = ''; // Clear the email field
+      })
+      .catch((error) => {
+        console.error("Email sending failed:", error);
+        alert("❌ Failed to send reset email. Please try again. (Check console for details)");
+      });
+  });
+
+  // --- AUTHENTICATION LOGIC (Frontend part) ---
+  document.getElementById("login-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const username = this.username.value;
+    const password = this.password.value;
+
+    try {
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message + " Redirecting to Rewear Homepage.");
+        window.location.href = "homepage.html"; // Redirect to your new homepage file
+      } else {
+        alert("Login failed: " + data.message);
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      alert('An error occurred during login. Please try again.');
+    }
+  });
+
+  document.getElementById("signup-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const username = this.username.value;
+    const email = this.email.value;
+    const password = this.password.value;
+    const confirmPassword = this.confirmPassword.value;
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message + " Redirecting to Rewear Homepage.");
+        window.location.href = "homepage.html"; // Redirect to your new homepage file
+      } else {
+        alert("Signup failed: " + data.message);
+      }
+    } catch (error) {
+      console.error('Error during signup:', error);
+      alert('An error occurred during signup. Please try again.');
+    }
+  });
+</script>
+</body>
+</html>
+
+rewear-app/public/homepage.html
+
+(Your main shopping page)
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rewear - Your Sustainable Fashion Destination</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Rewear is your online destination for sustainable, pre-loved fashion. Shop high-quality, unique clothing and accessories that are good for you and the planet.">
+  <meta property="og:site_name" content="Rewear">
+  <meta property="og:url" content="https://rewear.com/homepage.html"> <!-- Update with your actual URL -->
+  <meta property="og:title" content="Rewear - Sustainable & Pre-loved Fashion Online">
+  <meta property="og:type" content="website">
+  <meta property="og:description" content="Rewear is your online destination for sustainable, pre-loved fashion. Shop high-quality, unique clothing and accessories that are good for you and the planet.">
+  <meta property="og:image" content="https://via.placeholder.com/1200x630/A8DADC/FFFFFF?text=Rewear+Social+Share"> <!-- Replace with your actual social share image -->
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:site" content="@RewearOfficial"> <!-- Your Twitter handle -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rewear - Sustainable & Pre-loved Fashion Online">
+  <meta name="twitter:description" content="Rewear is your online destination for sustainable, pre-loved fashion. Shop high-quality, unique clothing and accessories that are good for you and the planet.">
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="https://via.placeholder.com/32x32/52796f/FFFFFF?text=RW" type="image/png" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-green: #52796f;
+      --secondary-green: #84a98c;
+      --light-beige: #f5f3ea;
+      --dark-beige: #e6e1d3;
+      --text-color: #333;
+      --gray-text: #666;
+      --white: #ffffff;
+      --dark-gray: #333;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--light-beige);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    body::after {
+      content: "";
+      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0.05;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* General Container */
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5em;
+      text-align: center;
+      margin-bottom: 40px;
+      color: var(--primary-green);
+    }
+    .section-title span {
+      display: block;
+      font-size: 0.5em;
+      color: var(--gray-text);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      margin-top: 5px;
+    }
+
+    /* Header Styling */
+    .site-header {
+      background-color: var(--white);
+      padding: 15px 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-green), var(--secondary-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .main-nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 25px;
+    }
+    .main-nav a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 600;
+      transition: color 0.3s ease;
+      white-space: nowrap;
+    }
+    .main-nav a:hover {
+      color: var(--primary-green);
+    }
+    .search-bar {
+      position: relative;
+      flex-grow: 1; /* Allows search bar to take available space */
+      max-width: 300px;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 14px;
+      padding-right: 35px; /* Space for icon */
+    }
+    .search-bar button {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gray-text);
+    }
+    .header-icons {
+      display: flex;
+      gap: 20px;
+    }
+    .header-icons a {
+      color: var(--text-color);
+      font-size: 20px;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .header-icons a:hover {
+      color: var(--primary-green);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: url('https://via.placeholder.com/1500x500/A8DADC/FFFFFF?text=Rewear+Sustainable+Fashion') no-repeat center center/cover;
+      color: #fff;
+      text-align: center;
+      padding: 100px 20px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px; /* Ensure a good height */
+    }
+    .hero-section::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.35); /* Darker overlay */
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.8em;
+      margin-bottom: 15px;
+      line-height: 1.1;
+    }
+    .hero-content p {
+      font-size: 1.3em;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+    .hero-button {
+      display: inline-block;
+      padding: 14px 35px;
+      background-color: var(--secondary-green);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1.1em;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .hero-button:hover {
+      background-color: var(--primary-green);
+      transform: translateY(-2px);
+    }
+
+    /* Categories Section */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 25px;
+    }
+    .category-card {
+      background-color: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .category-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+    .category-card h3 {
+      font-size: 1.1em;
+      margin: 15px 0;
+      color: var(--primary-green);
+      font-weight: 600;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+    .product-card {
+      background-color: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+    .product-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+    }
+    .product-info {
+      padding: 20px;
+    }
+    .product-info h3 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1.2em;
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+    .product-info p {
+      color: var(--gray-text);
+      font-size: 0.9em;
+      margin-bottom: 15px;
+    }
+    .product-price {
+      font-weight: bold;
+      color: var(--primary-green);
+      font-size: 1.1em;
+    }
+
+    /* How It Works / Value Prop Section */
+    .how-it-works-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      text-align: center;
+    }
+    .step-card {
+      background-color: var(--white);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+    .step-card .icon {
+      font-size: 40px;
+      color: var(--primary-green);
+      margin-bottom: 15px;
+    }
+    .step-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5em;
+      color: var(--primary-green);
+      margin-bottom: 10px;
+    }
+    .step-card p {
+      color: var(--gray-text);
+    }
+
+    /* Newsletter Section */
+    .newsletter-section {
+      background-color: var(--primary-green);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      margin-top: 60px;
+    }
+    .newsletter-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5em;
+      margin-bottom: 15px;
+    }
+    .newsletter-section p {
+      font-size: 1.1em;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+    .newsletter-form {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .newsletter-form input {
+      flex-grow: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+    .newsletter-form button {
+      padding: 12px 25px;
+      background-color: var(--secondary-green);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .newsletter-form button:hover {
+      background-color: #5d937a; /* Slightly darker secondary green */
+    }
+
+    /* Buy/Sell Specific Styles */
+    .buy-sell-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-top: 50px;
+    }
+    .buy-options, .sell-options {
+        flex: 1;
+        min-width: 300px;
+        background-color: var(--white);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+    .buy-options h3, .sell-options h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2em;
+        color: var(--primary-green);
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .buy-options ul {
+        list-style: none;
+        padding: 0;
+    }
+    .buy-options li {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        color: var(--gray-text);
+    }
+    .buy-options li strong {
+        color: var(--text-color);
+    }
+
+    .sell-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+    .sell-form input[type="text"],
+    .sell-form input[type="number"],
+    .sell-form input[type="file"],
+    .sell-form textarea,
+    .sell-form select {
+        width: calc(100% - 20px); /* Account for padding */
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-family: 'Poppins', sans-serif;
+    }
+    .sell-form textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    .sell-form button {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--secondary-green);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .sell-form button:hover {
+        background-color: var(--primary-green);
+    }
+
+    /* Footer Styling */
+    .site-footer {
+      background-color: var(--dark-gray);
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      margin-top: 60px;
+    }
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      text-align: left;
+      margin-bottom: 30px;
+    }
+    .footer-col {
+      flex-basis: 200px; /* Min width for columns */
+      margin: 20px;
+    }
+    .footer-col h4 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: var(--secondary-green);
+    }
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-col ul li {
+      margin-bottom: 8px;
+    }
+    .footer-col a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .footer-col a:hover {
+      color: var(--white);
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    .social-icons a {
+      color: #fff;
+      font-size: 24px;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    .payment-icons img {
+      height: 25px; /* Adjust as needed */
+      margin: 0 5px;
+    }
+
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .main-nav ul {
+        gap: 15px;
+      }
+      .header-left, .header-right {
+        gap: 10px;
+      }
+      .search-bar {
+        max-width: 200px;
+      }
+      .hero-content h1 {
+        font-size: 3em;
+      }
+      .hero-content p {
+        font-size: 1.1em;
+      }
+      .section-title {
+        font-size: 2em;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .site-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+        padding: 15px 20px;
+      }
+      .header-left {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .main-nav {
+        order: 3; /* Move nav below brand and icons */
+        width: 100%;
+      }
+      .main-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px 15px;
+      }
+      .search-bar {
+        order: 2; /* Move search bar between brand and nav */
+        width: 100%;
+        max-width: none;
+        margin-top: 10px;
+      }
+      .hero-section {
+        min-height: 300px;
+        padding: 60px 15px;
+      }
+      .hero-content h1 {
+        font-size: 2.5em;
+      }
+      .hero-content p {
+        font-size: 1em;
+      }
+      .section-title {
+        font-size: 1.8em;
+      }
+      .product-grid, .category-grid, .how-it-works-grid {
+        grid-template-columns: 1fr; /* Stack columns */
+      }
+      .newsletter-form {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .footer-content {
+        flex-direction: column;
+        align-items: center;
+      }
+      .footer-col {
+        text-align: center;
+        margin: 15px 0;
+      }
+      .buy-sell-section {
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 480px) {
+      .header-brand {
+        font-size: 28px;
+      }
+      .header-icons {
+        gap: 15px;
+      }
+      .hero-content h1 {
+        font-size: 2em;
+      }
+      .hero-button {
+        padding: 10px 25px;
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-left">
+      <a href="#" class="header-brand">Rewear</a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="#" onclick="navigate('Shop All')">Shop All</a></li>
+          <li><a href="#" onclick="navigate('Women')">Women</a></li>
+          <li><a href="#" onclick="navigate('Men')">Men</a></li>
+          <li><a href="#" onclick="navigate('Kids')">Kids</a></li>
+          <li><a href="#" onclick="navigate('Accessories')">Accessories</a></li>
+          <li><a href="#" onclick="navigate('Sale')">Sale</a></li>
+          <li><a href="#sell-section" onclick="navigate('Sell Your Items')">Sell Your Items</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search for items..." />
+      <button type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.085.12c.1.138.196.246.293.354l2.5 2.5a1 1 0 0 0 1.414-1.414l-2.5-2.5a1.5 1.5 0 0 0-.354-.293c-.06-.041-.12-.085-.12-.085Z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="header-right">
+      <div class="header-icons">
+        <a href="#" onclick="navigate('Account')"><!-- Account Icon SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+          </svg>
+        </a>
+        <a href="#" onclick="navigate('Wishlist')"><!-- Wishlist Icon SVG (Heart) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.879 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.091.082.174.174l.099.102q.1.103.216.298c.585.902 1.464 2.158 3.064 3.141 1.587.973 3.364 1.956 4.323 3.738C17.5 10.372 17.5 14.257 14.73 16z"/>
+          </svg>
+        </a>
+        <a href="#" onclick="navigate('Cart')"><!-- Cart Icon SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Discover Sustainable Style</h1>
+      <p>Shop pre-loved fashion that's good for your wardrobe and the planet. Up to 90% off retail!</p>
+      <a href="#buy-section" class="hero-button">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Buy and Sell Options Section -->
+  <div class="container buy-sell-section">
+    <div class="buy-options" id="buy-section">
+      <h3>Buy Pre-Loved Fashion</h3>
+      <p>Explore our curated selection of high-quality, sustainable clothing and accessories.</p>
+      <ul>
+        <li><strong>Vast Selection:</strong> Thousands of items from your favorite brands.</li>
+        <li><strong>Quality Guaranteed:</strong> Every item inspected for condition and authenticity.</li>
+        <li><strong>Eco-Friendly:</strong> Give clothes a second life, reduce fashion waste.</li>
+        <li><strong>Affordable Prices:</strong> Get amazing deals on unique pieces.</li>
+      </ul>
+      <a href="#featured-products" class="hero-button" onclick="navigate('Start Shopping')">Start Shopping</a>
+    </div>
+
+    <div class="sell-options" id="sell-section">
+      <h3>Sell Your Items</h3>
+      <p>Give your pre-loved clothes a new home and earn cash! It's easy and sustainable.</p>
+      <form class="sell-form" id="sellItemForm">
+        <label for="itemTitle">Item Title:</label>
+        <input type="text" id="itemTitle" name="title" placeholder="e.g., 'Zara Floral Summer Dress'" required>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category" required>
+          <option value="">Select Category</option>
+          <option value="Dresses">Dresses</option>
+          <option value="Tops">Tops</option>
+          <option value="Bottoms">Bottoms</option>
+          <option value="Outerwear">Outerwear</option>
+          <option value="Shoes">Shoes</option>
+          <option value="Bags">Bags</option>
+          <option value="Accessories">Accessories</option>
+        </select>
+
+        <label for="condition">Condition:</label>
+        <select id="condition" name="condition" required>
+          <option value="">Select Condition</option>
+          <option value="New with tags">New with tags</option>
+          <option value="Like new">Like new</option>
+          <option value="Excellent">Excellent</option>
+          <option value="Good">Good</option>
+          <option value="Fair">Fair</option>
+        </select>
+
+        <label for="price">Desired Price ($):</label>
+        <input type="number" id="price" name="price" min="1" step="0.01" placeholder="e.g., 25.00" required>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" placeholder="Describe your item's features, flaws, and unique details."></textarea>
+
+        <label for="itemImage">Upload Image:</label>
+        <input type="file" id="itemImage" name="image" accept="image/*" required>
+
+        <button type="submit">List Item Now</button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Categories Section -->
+  <div class="container">
+    <h2 class="section-title">Shop by Category<span>Find your next favorite piece</span></h2>
+    <div class="category-grid">
+      <div class="category-card" onclick="navigate('Dresses Category')">
+        <img src="https://via.placeholder.com/200x150/CCE2CB/000000?text=Dresses" alt="Dresses Category">
+        <h3>Dresses</h3>
+      </div>
+      <div class="category-card" onclick="navigate('Tops Category')">
+        <img src="https://via.placeholder.com/200x150/A8DADC/000000?text=Tops" alt="Tops Category">
+        <h3>Tops</h3>
+      </div>
+      <div class="category-card" onclick="navigate('Bottoms Category')">
+        <img src="https://via.placeholder.com/200x150/F8D4C8/000000?text=Bottoms" alt="Bottoms Category">
+        <h3>Bottoms</h3>
+      </div>
+      <div class="category-card" onclick="navigate('Outerwear Category')">
+        <img src="https://via.placeholder.com/200x150/D2E9FB/000000?text=Outerwear" alt="Outerwear Category">
+        <h3>Outerwear</h3>
+      </div>
+      <div class="category-card" onclick="navigate('Shoes Category')">
+        <img src="https://via.placeholder.com/200x150/C8F9F3/000000?text=Shoes" alt="Shoes Category">
+        <h3>Shoes</h3>
+      </div>
+      <div class="category-card" onclick="navigate('Bags Category')">
+        <img src="https://via.placeholder.com/200x150/E0BBE4/000000?text=Bags" alt="Bags Category">
+        <h3>Bags</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured New Arrivals Section -->
+  <div class="container" id="featured-products">
+    <h2 class="section-title">Just Dropped<span>Fresh finds, every day</span></h2>
+    <div class="product-grid" id="productGrid">
+      <!-- Products will be loaded here by JavaScript -->
+      <p>Loading products...</p>
+    </div>
+  </div>
+
+  <!-- How It Works Section -->
+  <div class="container">
+    <h2 class="section-title">How Rewear Works<span>Simple steps to sustainable shopping</span></h2>
+    <div class="how-it-works-grid">
+      <div class="step-card">
+        <div class="icon">🛍️</div>
+        <h3>Shop Smart</h3>
+        <p>Browse thousands of unique, high-quality pre-loved items from various brands.</p>
+      </div>
+      <div class="step-card">
+        <div class="icon">✨</div>
+        <h3>Find Gems</h3>
+        <p>Discover hidden treasures at unbeatable prices, all carefully inspected for quality.</p>
+      </div>
+      <div class="step-card">
+        <div class="icon">🌱</div>
+        <h3>Wear the Change</h3>
+        <p>Extend the life of clothing, reduce waste, and embrace eco-friendly fashion.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials Section -->
+  <div class="container" style="text-align: center;">
+    <h2 class="section-title">What Our Community Says<span>Hear from happy Rewear shoppers</span></h2>
+    <div class="testimonial-carousel" style="background-color: var(--white); padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); max-width: 700px; margin: 0 auto;">
+      <p id="homepage-testimonial-text" style="font-style: italic; font-size: 1.1em; color: var(--text-color); margin-bottom: 15px;"></p>
+      <p style="font-weight: 600; color: var(--primary-green);">— Happy Rewear Customer</p>
+    </div>
+  </div>
+
+  <!-- Newsletter Section -->
+  <section class="newsletter-section">
+    <h2>Stay In The Loop</h2>
+    <p>Sign up for our newsletter to get the latest drops, exclusive deals, and sustainability tips directly in your inbox.</p>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Your email address..." required />
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#" onclick="navigate('Women\'s Clothing Footer')">Women's Clothing</a></li>
+          <li><a href="#" onclick="navigate('Men\'s Clothing Footer')">Men's Clothing</a></li>
+          <li><a href="#" onclick="navigate('Kid\'s Fashion Footer')">Kid's Fashion</a></li>
+          <li><a href="#" onclick="navigate('Accessories Footer')">Accessories</a></li>
+          <li><a href="#" onclick="navigate('Brands A-Z Footer')">Brands A-Z</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Sell</h4>
+        <ul>
+          <li><a href="#sell-section" onclick="navigate('How to Sell Footer')">How to Sell</a></li>
+          <li><a href="#" onclick="navigate('Seller Dashboard Footer')">Seller Dashboard</a></li>
+          <li><a href="#" onclick="navigate('Pricing & Fees Footer')">Pricing & Fees</a></li>
+          <li><a href="#" onclick="navigate('Consignment Program Footer')">Consignment Program</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>About Rewear</h4>
+        <ul>
+          <li><a href="#" onclick="navigate('Our Mission Footer')">Our Mission</a></li>
+          <li><a href="#" onclick="navigate('Sustainability Footer')">Sustainability</a></li>
+          <li><a href="#" onclick="navigate('Press Footer')">Press</a></li>
+          <li><a href="#" onclick="navigate('Careers Footer')">Careers</a></li>
+          <li><a href="#" onclick="navigate('Blog Footer')">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a href="#" onclick="navigate('Help Center Footer')">Help Center</a></li>
+          <li><a href="#" onclick="navigate('Shipping & Returns Footer')">Shipping & Returns</a></li>
+          <li><a href="#" onclick="navigate('Contact Us Footer')">Contact Us</a></li>
+          <li><a href="#" onclick="navigate('Size Guide Footer')">Size Guide</a></li>
+          <li><a href="#" onclick="navigate('FAQ Footer')">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="social-icons">
+        <a href="#" target="_blank"><!-- Facebook -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.013 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+          </svg>
+        </a>
+        <a href="#" target="_blank"><!-- Instagram -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.269.087 3.85.048 4.703.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.297-.048c.852-.04 1.433-.174 1.942-.372a3.917 3.917 0 0 0 1.417-.923 3.927 3.927 0 0 0 .923-1.417c.198-.51.333-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.172-.048-3.297c-.04-.852-.174-1.433-.372-1.942a3.917 3.917 0 0 0-.923-1.417A3.927 3.927 0 0 0 13.24 0.42C12.731.222 12.15.087 11.297.048C10.445.01 10.173 0 8 0m0 1.5c2.164 0 2.438.01 3.286.05.783.037 1.223.166 1.488.272a2.375 2.375 0 0 1 .856.536 2.38 2.38 0 0 1 .537.855c.106.265.236.705.272 1.488.04.848.05 1.12.05 3.287 0 2.162-.01 2.436-.05 3.284-.037.784-.167 1.223-.273 1.489a2.375 2.375 0 0 1-.536.855 2.38 2.38 0 0 1-.855.536c-.266.106-.705.236-1.489.272-.848.04-1.12.05-3.287.05-2.162 0-2.436-.01-3.284-.05-.784-.037-1.223-.167-1.489-.273a2.375 2.375 0 0 1-.855-.536 2.38 2.38 0 0 1-.536-.855c-.106-.265-.236-.705-.272-1.489-.04-.848-.05-1.12-.05-3.287 0-2.162.01-2.436.05-3.284.037-.784.167-1.223.273-1.489a2.375 2.375 0 0 1 .536-.855 2.38 2.38 0 0 1 .855-.536c.265-.106.705-.236 1.489-.272C5.564 1.51 5.836 1.5 8 1.5m0 3.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9m0 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7m0 1a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"/>
+          </svg>
+        </a>
+        <a href="#" target="_blank"><!-- Twitter -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M12.678 2.748L16 0H12.98l-3.25 4.296L5.592 0H0l4.364 6.27L0 12.256l4.28 0.001 3.535-4.82L10.407 16H16l-4.757-6.752zM4.015 1.13h1.874L10.37 7.91h-1.87L4.015 1.13zm.867 12.825L1.88 3.513h2.384L7.336 14.156H4.882zm8.85 0L10.12 9.07l3.664-5.367H11.58L8.71 8.358 4.79 16H0l5.827-8.358L0 0h5.056L8 5.347 11.234 0H16l-3.132 4.642L15.35 16h-2.918L8.01 9.948z"/>
+          </svg>
+        </a>
+      </div>
+      <div class="payment-icons">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" height="25">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Visa_Electron_logo.svg" alt="Visa" height="25">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" height="25">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Google_Pay_Logo.svg" alt="Google Pay" height="25">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_Pay_logo.svg" alt="Apple Pay" height="25">
+      </div>
+      <p>&copy; 2025 Rewear. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Testimonial rotation for homepage
+    const homepageTestimonials = [
+      '"Rewear made it so easy to find stylish clothes that are also sustainable. I love it!" - Jane D.',
+      '"The quality of items on Rewear is amazing for the price. My new go-to for fashion." - Mark S.',
+      '"Finally, a way to refresh my wardrobe without guilt. Rewear is a game-changer!" - Emily R.',
+      '"Great selection and excellent customer service. Highly recommend Rewear for unique finds." - Chris T.',
+    ];
+    let currentTestimonialIndex = 0;
+    const homepageTestimonialText = document.getElementById("homepage-testimonial-text");
+
+    function rotateHomepageTestimonials() {
+      homepageTestimonialText.innerText = homepageTestimonials[currentTestimonialIndex];
+      currentTestimonialIndex = (currentTestimonialIndex + 1) % homepageTestimonials.length;
+    }
+
+    // Initial load
+    rotateHomepageTestimonials();
+    // Rotate every 10 seconds
+    setInterval(rotateHomepageTestimonials, 10000);
+
+    // Simulated Navigation Function
+    function navigate(pageName) {
+      if (pageName.startsWith('#')) {
+        // Smooth scroll to section if it's an anchor link
+        document.querySelector(pageName).scrollIntoView({
+          behavior: 'smooth'
+        });
+        alert(`Scrolling to section: ${pageName.substring(1)}`);
+      } else {
+        alert(`Navigating to: ${pageName}\n(In a real app, this would load a new page or filter content.)`);
+      }
+      // In a real application, you would use:
+      // window.location.href = `/${pageName.toLowerCase().replace(/\s/g, '-')}.html`; // For static pages
+      // OR fetch dynamic content based on pageName
+    }
+
+    // Dummy search function (for demonstration)
+    document.querySelector('.search-bar button').addEventListener('click', function() {
+      const searchTerm = this.previousElementSibling.value;
+      if (searchTerm) {
+        alert(`Searching for: "${searchTerm}"\n(This is a static demo. Real search requires a backend!)`);
+        // In a real application, you'd send this to a server-side search API
+      } else {
+        alert('Please enter a search term.');
+      }
+    });
+
+    // Dummy newsletter signup (for demonstration)
+    document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      alert(`Thank you for subscribing, ${email}!\n(This is a static demo. Real signup requires a backend!)`);
+      this.reset(); // Clear the form
+      // In a real application, you'd send this email to your newsletter service
+    });
+
+    // --- Frontend Logic for Fetching Products ---
+    async function fetchProducts() {
+        const productGrid = document.getElementById('productGrid');
+        productGrid.innerHTML = '<p>Loading products from server...</p>'; // Show loading message
+        try {
+            const response = await fetch('http://localhost:3000/api/products');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const products = await response.json();
+            
+            if (products.length === 0) {
+                productGrid.innerHTML = '<p>No products available yet. Be the first to sell!</p>';
+                return;
+            }
+
+            productGrid.innerHTML = ''; // Clear loading message
+            products.forEach(product => {
+                const productCard = `
+                    <div class="product-card" onclick="navigate('${product.title} Product')">
+                        <img src="${product.imageUrl}" alt="${product.title}">
+                        <div class="product-info">
+                            <h3>${product.title}</h3>
+                            <p>${product.description || 'No description provided.'}</p>
+                            <div class="product-price">$${product.price.toFixed(2)}</div>
+                        </div>
+                    </div>
+                `;
+                productGrid.insertAdjacentHTML('beforeend', productCard);
+            });
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            productGrid.innerHTML = '<p>Failed to load products. Please ensure the backend server is running.</p>';
+        }
+    }
+
+    // --- Frontend Logic for Selling Items ---
+    document.getElementById("sellItemForm").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(this); // Use FormData directly for file uploads
+
+        try {
+            const response = await fetch('http://localhost:3000/api/products', {
+                method: 'POST',
+                body: formData // Multer expects FormData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Item listed successfully! ' + data.message);
+                this.reset(); // Clear form on success
+                fetchProducts(); // Refresh product list after selling a new item
+            } else {
+                alert('Failed to list item: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error listing item:', error);
+            alert('An error occurred while listing your item. Please try again. (Check console for details)');
+        }
+    });
+
+    // Fetch products when the homepage loads
+    document.addEventListener('DOMContentLoaded', fetchProducts);
+
+  </script>
+</body>
+</html>
+
+rewear-app/package.json
+
+(Node.js project configuration)
+
+{
+  "name": "rewear-app",
+  "version": "1.0.0",
+  "description": "A full-stack demo for Rewear shopping website (in-memory data).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["rewear", "ecommerce", "nodejs", "express", "in-memory", "fullstack"],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}
+
+rewear-app/server.js
+
+(Node.js backend logic - in-memory data)
+
+// server.js (In-memory data storage)
+
+const express = require('express');
+const path = require('path');
+const multer = require('multer'); // For handling file uploads (e.g., product images)
+const cors = require('cors'); // For allowing cross-origin requests from your frontend
+const fs = require('fs'); // Node.js File System module
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// --- In-Memory Data Stores ---
+const users = []; // Stores user objects: { username, email, password }
+const products = []; // Stores product objects: { id, title, category, condition, price, description, imageUrl }
+
+// --- Middleware ---
+// Configure CORS for development. In production, restrict to your actual domain.
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from your own frontend
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
+app.use(express.json()); // Parses incoming JSON requests
+app.use(express.urlencoded({ extended: true })); // Parses URL-encoded data (for forms)
+
+// Serve static files (your frontend HTML, CSS, JS) from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Create the uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// --- Multer for Image Uploads ---
+// This stores images locally. For production, use cloud storage (AWS S3, Cloudinary).
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir); // Images will be saved in public/uploads/
+  },
+  filename: (req, file, cb) => {
+    // Generate a unique filename (timestamp + original extension)
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+
+// --- API Endpoints ---
+
+// Route to get all products (for the "Buy" section)
+app.get('/api/products', (req, res) => {
+  // Return all products currently in memory
+  res.json(products);
+});
+
+// Route to add a new product (for the "Sell" section)
+// 'upload.single('image')' handles the file upload for a field named 'image'
+app.post('/api/products', upload.single('image'), (req, res) => {
+  try {
+    const { title, category, condition, price, description } = req.body;
+    
+    // Construct the image URL. Multer saves the file, we just need the path.
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : 'https://via.placeholder.com/250x250/F0F0F0/000000?text=No+Image';
+
+    if (!title || !category || !condition || !price) {
+        // If an image was uploaded but other data is missing, clean up the uploaded file
+        if (req.file) {
+            fs.unlink(req.file.path, (err) => {
+                if (err) console.error('Error deleting incomplete upload:', err);
+            });
+        }
+        return res.status(400).json({ message: 'Missing required product fields.' });
+    }
+
+    const newProduct = {
+      id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1, // Simple auto-incrementing ID
+      title,
+      category,
+      condition,
+      price: parseFloat(price), // Convert price to number
+      description,
+      imageUrl,
+      createdAt: new Date()
+    };
+
+    products.push(newProduct); // Add the new product to the in-memory array
+    console.log('New product listed (in-memory):', newProduct);
+    res.status(201).json({ message: 'Product listed successfully!', product: newProduct });
+  } catch (error) {
+    console.error('Failed to list product:', error);
+    // If an error occurred after file upload but before saving product data, try to delete the file
+    if (req.file) {
+        fs.unlink(req.file.path, (err) => {
+            if (err) console.error('Error deleting failed upload:', err);
+        });
+    }
+    res.status(500).json({ message: 'Failed to list product', error: error.message });
+  }
+});
+
+// --- Basic User Authentication Endpoints (Conceptual - NOT SECURE FOR PRODUCTION) ---
+// **WARNING: Passwords are stored in plain text in memory for this demo!**
+
+app.post('/api/register', (req, res) => {
+    try {
+        const { username, email, password } = req.body;
+
+        // Basic validation
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }
+
+        // Check if user already exists
+        const existingUser = users.find(u => u.username === username || u.email === email);
+        if (existingUser) {
+            return res.status(409).json({ message: 'Username or email already exists.' });
+        }
+
+        const newUser = { username, email, password };
+        users.push(newUser); // Add the new user to the in-memory array
+        console.log('New user registered (in-memory):', newUser);
+        res.status(201).json({ message: 'User registered successfully!' });
+    } catch (error) {
+        console.error('Registration failed:', error);
+        res.status(500).json({ message: 'Registration failed.', error: error.message });
+    }
+});
+
+app.post('/api/login', (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Basic validation
+        if (!username || !password) {
+            return res.status(400).json({ message: 'Username and password are required.' });
+        }
+
+        const user = users.find(u => u.username === username && u.password === password); // **WARNING: Plain text password comparison!**
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid username or password.' });
+        }
+
+        // In a real app, you'd generate a JWT token here and send it to the client
+        res.json({ message: 'Logged in successfully!', username: user.username });
+    } catch (error) {
+        console.error('Login failed:', error);
+        res.status(500).json({ message: 'Login failed.', error: error.message });
+    }
+});
+
+// --- Start Server ---
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Frontend accessible at http://localhost:${PORT}/index.html`);
+  console.log(`Direct homepage access at http://localhost:${PORT}/homepage.html`);
+  console.log(`Images will be saved in: ${uploadsDir}`);
+  console.warn('WARNING: All data is stored in-memory and will be lost on server restart!');
+});
+
+4. Install Node.js Dependencies
+
+Open your terminal or command prompt, navigate to the rewear-app directory (the one containing package.json), and run:
+
+npm install
+
+This command will read the package.json file and install all the necessary backend libraries (express, multer, cors).
+
+5. Create the uploads Directory
+
+Inside your public folder, create an empty folder named uploads. This is where the server will save any images uploaded via the "Sell Your Items" form.
+
+Your final project structure should look like this:
+
+rewear-app/
+├── public/
+│   ├── index.html
+│   ├── homepage.html
+│   └── uploads/  (This folder should be empty initially)
+├── package.json
+└── server.js
+
+6. Run the Backend Server
+
+In your terminal (still in the rewear-app directory), start the server:
+
+npm start
+
+You should see output similar to this:
+
+Server running on http://localhost:3000
+Frontend accessible at http://localhost:3000/index.html
+Direct homepage access at http://localhost:3000/homepage.html
+Images will be saved in: <path-to-your-rewear-app>/public/uploads
+WARNING: All data is stored in-memory and will be lost on server restart!
+
+7. Access the Application
+
+Open your web browser and go to:
+
+http://localhost:3000/index.html
+
+How to Test
+
+Sign Up:
+
+On the authentication page, click "Don't have an account? Sign up".
+
+Fill in the details (e.g., Username: testuser, Password: password, Email: test@example.com).
+
+Click "Sign Up". You'll see an alert confirming registration and then be redirected to homepage.html.
+
+Sign In:
+
+Go back to index.html.
+
+Use the username and password you just registered.
+
+Click "Sign In". You'll be redirected to homepage.html.
+
+Sell an Item:
+
+On homepage.html, scroll down to the "Sell Your Items" section.
+
+Fill out the form with item details.
+
+Crucially, select an image file from your computer for the "Upload Image" field.
+
+Click "List Item Now". You'll get an alert confirming the listing.
+
+The newly listed item (with its image) should appear in the "Just Dropped" section almost immediately.
+
+Data Persistence Check:
+
+While the server is running and you have some users/products, go to your terminal where npm start is running.
+
+Press Ctrl+C to stop the server.
+
+Run npm start again.
+
+Refresh your browser (http://localhost:3000/index.html). Try to log in with your previously registered user, or check for products on homepage.html. You will find that all data is gone, confirming the in-memory storage.
+
+This README.md provides a comprehensive guide for anyone looking to set up and explore your Rewear demo application.
